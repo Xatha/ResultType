@@ -1,0 +1,136 @@
+﻿namespace ResultType;
+
+public static class Result
+{
+    /// <summary>
+    /// Creates a success result.
+    /// </summary>
+    /// <param name="value">Value you wish to wrap.</param>
+    /// <returns>Value wrapped in a Result type.</returns>
+    public static Result<TResult> Ok<TResult>(TResult value) => new(value);
+    
+    /// <summary>
+    /// Creates a failure result with information about the error.
+    /// </summary>
+    /// <param name="error">Information about the error.</param>
+    /// <remarks><see cref="ResultError"/> supports implicit overloading for <see cref="string"/>, thus you can pass <see cref="string"/> as argument.</remarks>
+    /// <returns>Error wrapped in a Result type.</returns>
+    public static Result<TResult> Err<TResult>(ResultError error) => new(error);
+}
+
+
+public readonly struct Result<TResult>
+{
+    private readonly TResult _value;
+    private readonly ResultError _error;
+    private readonly bool _isSuccess;
+
+    internal Result(TResult value)
+    {
+        _isSuccess = true;
+        _value = value;
+    }
+
+    internal Result(ResultError error)
+    {
+        _isSuccess = false;
+        _value = default;
+        _error = error;
+    }
+    
+    public static implicit operator Result<TResult>(TResult value) => Ok(value);
+
+    public static implicit operator Result<TResult>(ResultError error) => Err(error);
+
+    public static implicit operator Result<TResult>(string error) => Err(error);
+    
+    
+    internal static Result<TResult> Ok(TResult value) => new(value);
+    
+    /// <summary>
+    /// Creates a failure result with information about the error.
+    /// </summary>
+    /// <param name="error">Information about the error.</param>
+    /// <remarks><see cref="ResultError"/> supports implicit overloading for <see cref="string"/>, thus you can pass <see cref="string"/> as argument.</remarks>
+    /// <returns>Error wrapped in a Result type.</returns>
+    public static Result<TResult> Err(ResultError error) => new(error);
+    
+    /// <summary>
+    /// Creates a failure result with no information about the error.
+    /// </summary>
+    /// <returns>Empty error wrapped in a Result type.</returns>
+    public static Result<TResult> Err() => new(ResultError.Create());
+
+    /// <summary>
+    /// Attempts to unwrap the result. If the result is a success, the value is safe to use. If the result is a failure, the error is safe to use.
+    /// It is recommended you use this in a pattern matching fashion, for example in an if-statement.
+    /// </summary>
+    /// <param name="error">Result error, if value is invalid.</param>
+    /// <param name="value">The unwrapped value, if the value is valid.</param>
+    /// <example> Example usage:
+    /// <code>
+    /// Result&lt;double&gt; Div(int a, int b)
+    /// {
+    ///    if (b == 0) return "Divide by zero!";
+    ///    return (double)a / b;
+    /// }
+    ///
+    /// Result&lt;double&gt; result = Div(4, 2);
+    /// if (result.TryUnwrap(out ResultError error, out int value))
+    /// {
+    ///     Console.WriteLine($"Result: {value}");
+    /// }
+    /// else
+    /// {
+    ///     Console.WriteLine($"Error: {error}");
+    /// }
+    /// // Prints "Result: 2"
+    /// </code>
+    /// </example>
+    /// <returns>True if value is present, otherwise false.</returns>
+    public bool TryUnwrap(out ResultError error, out TResult value)
+    {
+        error = _error; 
+        value = _value;
+        return _isSuccess;
+    }
+
+    /// <summary>
+    /// Unwraps the result into volatile accessible data. This is not safe to use, since there is no guarantee that a value or ResultError will be there. 
+    /// </summary>
+    /// <remarks><see cref="VolatileResult{TResult}"/> makes it easy to (unsafely) unwrap a result into a tuple.</remarks>
+    /// <returns>A volatile easily accessible representation of Result.</returns>
+    /// 
+    public VolatileResult<TResult> Unpack()
+    {
+        return _isSuccess ? new VolatileResult<TResult>(_value) : new VolatileResult<TResult>(_error);
+    }
+
+    /// <summary>
+    /// Matches the result with a success and failure function. The success function is called if the result is a success, otherwise the failure function is called.
+    /// </summary>
+    /// <param name="success">Function to call if value exists.</param>
+    /// <param name="failure">Function to call if value does not exist.</param>
+    /// <returns>Result after being passed through one of the provided functions.</returns>
+    public Result<TResult> Match(
+        Func<TResult, Result<TResult>> success, 
+        Func<ResultError, Result<TResult>> failure)
+    {
+        return _isSuccess ? success(_value) : failure(_error);
+    }
+
+    /// <summary>
+    /// Matches the result with a success and failure function. The success function is called if the result is a success, otherwise the failure function is called.
+    /// </summary>
+    /// <param name="success">Function to call if value exists.</param>
+    /// <param name="failure">Function to call if value does not exist.</param>
+    public void Match(
+        Action<TResult> success,
+        Action<ResultError> failure)
+    {
+        if (_isSuccess)
+            success(_value);
+        else
+            failure(_error);
+    }
+}
