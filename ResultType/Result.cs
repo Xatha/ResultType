@@ -3,19 +3,29 @@
 public readonly struct Result
 {
     private readonly ResultError _error;
+    private readonly bool _isSuccess;
+
     private Result(bool isSuccess)
     {
-        IsSuccess = isSuccess;
+        _isSuccess = isSuccess;
         _error = default;
     }
     
     private Result(ResultError error)
     {
-        IsSuccess = false;
+        _isSuccess = false;
         _error = error;
     }
     
-    public bool IsSuccess { get; }
+    /// <summary>
+    /// Gets the error message, if present.
+    /// </summary>
+    /// <returns>True if result failed, otherwise false.</returns>
+    public bool IsFailed(out ResultError error)
+    {
+        error = _error;
+        return !_isSuccess;
+    }
 
     /// <summary>
     /// Creates a success result with no value.

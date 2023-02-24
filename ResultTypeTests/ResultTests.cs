@@ -33,7 +33,7 @@ public class ResultTests
         failureResult = Result.Err();
 
         // Assert
-        Assert.That(successResult.IsSuccess, Is.EqualTo(true));
-        Assert.That(failureResult.IsSuccess, Is.EqualTo(false));
+        Assert.That(successResult.IsFailed(out _), Is.EqualTo(false));
+        Assert.That(failureResult.IsFailed(out _), Is.EqualTo(true));
     }
 }
