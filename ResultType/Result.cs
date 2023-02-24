@@ -16,6 +16,12 @@ public static class Result
     /// <remarks><see cref="ResultError"/> supports implicit overloading for <see cref="string"/>, thus you can pass <see cref="string"/> as argument.</remarks>
     /// <returns>Error wrapped in a Result type.</returns>
     public static Result<TResult> Err<TResult>(ResultError error) => new(error);
+    
+    /// <summary>
+    /// Creates a failure result with no information about the error.
+    /// </summary>
+    /// <returns>Empty error wrapped in a Result type.</returns>
+    internal static Result<TResult> Err<TResult>() => new(ResultError.Create());
 }
 
 
@@ -37,29 +43,6 @@ public readonly struct Result<TResult>
         _value = default;
         _error = error;
     }
-    
-    public static implicit operator Result<TResult>(TResult value) => Ok(value);
-
-    public static implicit operator Result<TResult>(ResultError error) => Err(error);
-
-    public static implicit operator Result<TResult>(string error) => Err(error);
-    
-    
-    internal static Result<TResult> Ok(TResult value) => new(value);
-    
-    /// <summary>
-    /// Creates a failure result with information about the error.
-    /// </summary>
-    /// <param name="error">Information about the error.</param>
-    /// <remarks><see cref="ResultError"/> supports implicit overloading for <see cref="string"/>, thus you can pass <see cref="string"/> as argument.</remarks>
-    /// <returns>Error wrapped in a Result type.</returns>
-    public static Result<TResult> Err(ResultError error) => new(error);
-    
-    /// <summary>
-    /// Creates a failure result with no information about the error.
-    /// </summary>
-    /// <returns>Empty error wrapped in a Result type.</returns>
-    public static Result<TResult> Err() => new(ResultError.Create());
 
     /// <summary>
     /// Attempts to unwrap the result. If the result is a success, the value is safe to use. If the result is a failure, the error is safe to use.
@@ -133,4 +116,17 @@ public readonly struct Result<TResult>
         else
             failure(_error);
     }
+    
+    public static implicit operator Result<TResult>(TResult value) => Ok(value);
+
+    public static implicit operator Result<TResult>(ResultError error) => Err(error);
+
+    public static implicit operator Result<TResult>(string error) => Err(error);
+    
+    
+    internal static Result<TResult> Ok(TResult value) => new(value);
+    
+    internal static Result<TResult> Err(ResultError error) => new(error);
+    
+    internal static Result<TResult> Err() => new(ResultError.Create());
 }

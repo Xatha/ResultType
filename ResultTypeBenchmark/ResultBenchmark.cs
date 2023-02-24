@@ -21,7 +21,7 @@ public class ResultBenchmark
     [Benchmark]
     public void Result_Err_ReferenceType()
     {
-        Result<DummyReferenceType> wrapped = Result<DummyReferenceType>.Err("Error");
+        Result<DummyReferenceType> wrapped = Result.Err<DummyReferenceType>("Error");
     }
     
     [Benchmark]

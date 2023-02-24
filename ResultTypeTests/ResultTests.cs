@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using ResultType;
 
 namespace ResultMonadTests;
@@ -12,13 +13,13 @@ public class ResultTests
         
         // Act
         successResult = Result.Ok(2.0);
-        failureResult1 = Result<double>.Err("Result error1");
-        failureResult2 = Result<double>.Err(ResultError.Create("Result error2"));
+        failureResult1 = Result.Err<double>("Result error1");
+        failureResult2 = Result.Err<double>(ResultError.Create("Result error2"));
         
         // Assert
         Assert.That(successResult, Is.EqualTo(Result.Ok(2.0)));
-        Assert.That(failureResult1, Is.EqualTo(Result<double>.Err("Result error1")));
-        Assert.That(failureResult2, Is.EqualTo(Result<double>.Err("Result error2")));
+        Assert.That(failureResult1, Is.EqualTo(Result.Err<double>("Result error1")));
+        Assert.That(failureResult2, Is.EqualTo(Result.Err<double>("Result error2")));
     }
     
     [Test]
@@ -34,8 +35,8 @@ public class ResultTests
         
         // Assert
         Assert.That(successResult, Is.EqualTo(Result.Ok(2.0)));
-        Assert.That(failureResult1, Is.EqualTo(Result<double>.Err("Result error1")));
-        Assert.That(failureResult2, Is.EqualTo(Result<double>.Err("Result error2")));
+        Assert.That(failureResult1, Is.EqualTo(Result.Err<double>("Result error1")));
+        Assert.That(failureResult2, Is.EqualTo(Result.Err<double>("Result error2")));
     }
 
     [Test]
@@ -102,7 +103,7 @@ public class ResultTests
             success => Assert.Fail("Should not be able to divide by zero"),
             failure => Assert.That(failure.Message, Is.EqualTo("Divide by zero")));
     }
-    
+
     [Test]
     public void MatchTResultTest()
     {
@@ -117,15 +118,12 @@ public class ResultTests
         Assert.That(successResult.Match(
             success => success,
             failure => 0), Is.EqualTo(Result.Ok(0.5)));
-        
+
         Assert.That(failureResult.Match(
             success => success,
-            failure => failure), Is.EqualTo(Result<double>.Err("Divide by zero")));
+            failure => failure), Is.EqualTo(Result.Err<double>("Divide by zero")));
     }
 
-    
-    
-    
     private Result<double> Divide(int a, int b)
     {
         return b == 0 ? ResultError.Create("Divide by zero") : (double)a / b;
