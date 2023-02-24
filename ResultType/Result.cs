@@ -1,7 +1,40 @@
 ﻿namespace ResultType;
 
-public static class Result
+public readonly struct Result
 {
+    private readonly ResultError _error;
+    private Result(bool isSuccess)
+    {
+        IsSuccess = isSuccess;
+        _error = default;
+    }
+    
+    private Result(ResultError error)
+    {
+        IsSuccess = false;
+        _error = error;
+    }
+    
+    public bool IsSuccess { get; }
+
+    /// <summary>
+    /// Creates a success result with no value.
+    /// </summary>
+    /// <returns>Result indicating success.</returns>
+    public static Result Ok() => new(true);
+    
+    /// <summary>
+    /// Creates a failure result with no value.
+    /// </summary>
+    /// <returns>Result indicating failure.</returns>
+    public static Result Err() => new(false);
+    
+    /// <summary>
+    /// Creates a failure result with no value. The error message is used to provide information about the error.
+    /// </summary>
+    /// <returns>Result indicating failure.</returns>
+    public static Result Err(ResultError error) => new(error);
+    
     /// <summary>
     /// Creates a success result.
     /// </summary>

@@ -7,7 +7,7 @@
 
         <IsPackable>false</IsPackable>
 
-        <RootNamespace>ResultMonadTests</RootNamespace>
+        <RootNamespace>ResultTypeTests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
