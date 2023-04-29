@@ -73,7 +73,7 @@ public class ResultGenericTests
         {
             Assert.Fail(err.Message);
         }
-        
+
         if (failureResult.TryUnwrap(out err, out val))
         {
             Assert.Fail("Should not be able to divide by zero");
@@ -81,6 +81,36 @@ public class ResultGenericTests
         else
         {
             Assert.That(err.Message, Is.EqualTo("Divide by zero"));
+        }
+    }
+    
+    [Test]
+    public void TryUnwrap_CanUnwrapOverload()
+    {
+        // Arrange
+        Result<double> successResult, failureResult;
+
+        // Act
+        successResult = Divide(1, 2);
+        failureResult = Divide(1, 0);
+        
+        // Assert
+        if (successResult.TryUnwrap(out var val))
+        {
+            Assert.That(val, Is.EqualTo(0.5));
+        }
+        else
+        {
+            Assert.Fail("Unwrap should have succeeded");
+        }
+
+        if (failureResult.TryUnwrap(out val))
+        {
+            Assert.Fail("Should not be able to divide by zero");
+        }
+        else
+        {
+            Assert.True(true);
         }
     }
 

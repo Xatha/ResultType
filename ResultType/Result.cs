@@ -120,6 +120,34 @@ public readonly struct Result<TResult>
         value = _value;
         return _isSuccess;
     }
+    
+    /// <summary>
+    /// Attempts to unwrap the result. If the result is a success, the value is safe to use.
+    /// It is recommended you use this in a pattern matching fashion, for example in an if-statement.
+    /// </summary>
+    /// <param name="value">The unwrapped value, if the value is valid. If invalid default is used.</param>
+    /// <example> Example usage:
+    /// <code>
+    /// Result&lt;double&gt; Div(int a, int b)
+    /// {
+    ///    if (b == 0) return "Divide by zero!";
+    ///    return (double)a / b;
+    /// }
+    ///
+    /// Result&lt;double&gt; result = Div(4, 2);
+    /// if (result.TryUnwrap(out int value))
+    /// {
+    ///     Console.WriteLine($"Result: {value}");
+    /// }
+    /// // Prints "Result: 2"
+    /// </code>
+    /// </example>
+    /// <returns>True if value is present, otherwise false.</returns>
+    public bool TryUnwrap(out TResult value)
+    {
+        value = _value;
+        return _isSuccess;
+    }
 
     /// <summary>
     /// Unwraps the result into volatile accessible data. This is not safe to use, since there is no guarantee that a value or ResultError will be there. 
