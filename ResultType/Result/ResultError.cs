@@ -1,4 +1,4 @@
-namespace ResultType;
+namespace ResultType.Result;
 
 public readonly struct ResultError
 {
@@ -13,5 +13,5 @@ public readonly struct ResultError
 
     public static ResultError Create(string message) => new(message);
 
-    public static ResultError Create() => new("");
+    public static ResultError Empty => new(string.Empty);
 }

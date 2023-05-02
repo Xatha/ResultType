@@ -1,4 +1,4 @@
-﻿namespace ResultType;
+﻿namespace ResultType.Result;
 
 public readonly struct Result
 {
@@ -64,7 +64,7 @@ public readonly struct Result
     /// Creates a failure result with no information about the error.
     /// </summary>
     /// <returns>Empty error wrapped in a Result type.</returns>
-    internal static Result<TResult> Err<TResult>() => new(ResultError.Create());
+    public static Result<TResult> Err<TResult>() => new(ResultError.Empty);
 }
 
 
@@ -150,17 +150,6 @@ public readonly struct Result<TResult>
     }
 
     /// <summary>
-    /// Unwraps the result into volatile accessible data. This is not safe to use, since there is no guarantee that a value or ResultError will be there. 
-    /// </summary>
-    /// <remarks><see cref="VolatileResult{TResult}"/> makes it easy to (unsafely) unwrap a result into a tuple.</remarks>
-    /// <returns>A volatile easily accessible representation of Result.</returns>
-    /// 
-    public VolatileResult<TResult> Unpack()
-    {
-        return _isSuccess ? new VolatileResult<TResult>(_value) : new VolatileResult<TResult>(_error);
-    }
-
-    /// <summary>
     /// Matches the result with a success and failure function. The success function is called if the result is a success, otherwise the failure function is called.
     /// </summary>
     /// <param name="success">Function to call if value exists.</param>
@@ -183,21 +172,25 @@ public readonly struct Result<TResult>
         Action<ResultError> failure)
     {
         if (_isSuccess)
+        {
             success(_value);
+        }
         else
+        {
             failure(_error);
+        }
     }
     
     public static implicit operator Result<TResult>(TResult value) => Ok(value);
 
     public static implicit operator Result<TResult>(ResultError error) => Err(error);
 
-    public static implicit operator Result<TResult>(string error) => Err(error);
+    //public static implicit operator Result<TResult>(string error) => Err(error);
     
     
     internal static Result<TResult> Ok(TResult value) => new(value);
     
     internal static Result<TResult> Err(ResultError error) => new(error);
     
-    internal static Result<TResult> Err() => new(ResultError.Create());
+    internal static Result<TResult> Err() => new(ResultError.Empty);
 }

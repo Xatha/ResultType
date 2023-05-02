@@ -1,5 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using ResultType;
+using ResultType.Result;
 
 namespace ResultMonadBenchmark;
 

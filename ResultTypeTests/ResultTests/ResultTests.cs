@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using ResultType;
+using ResultType.Result;
 
-namespace ResultTypeTests;
+namespace ResultTypeTests.ResultTests;
 
 public class ResultTests
 {
