@@ -11,13 +11,13 @@ public class OptionExtensionsTests
     {
         // Arrange
         string? input = null;
-        
-        string expected = "isNone!"; 
+
+        var expected = "isNone!";
         string actual;
 
         // Act
         actual = input.ToOption().Collapse("isNone!");
-        
+
         // Assert
         Assert.That(actual, Is.EqualTo(expected));
     }
@@ -27,36 +27,54 @@ public class OptionExtensionsTests
     {
         // Arrange
         int? input = null;
-        
-        int expected = -9999; 
+
+        var expected = -9999;
         int actual;
 
         // Act
         actual = input.ToOption().Collapse(-9999);
-        
+
         // Assert
         Assert.That(actual, Is.EqualTo(expected));
     }
-    
+
     [Test]
     public void ToOption_OnNotNull_WillBeOption()
     {
         // Arrange
-        string? classInput = "Hello World!";;
+        var classInput = "Hello World!";
+        
         int? structInput = 69;
-        
-        string expectedClass = "Hello World!";
-        int expectedStruct = 69;
-        
+
+        var expectedClass = "Hello World!";
+        var expectedStruct = 69;
+
         string actualClass;
         int actualStruct;
 
         // Act
         actualClass = classInput.ToOption().Collapse("isNone!");
         actualStruct = structInput.ToOption().Collapse(-1);
-        
+
         // Assert
         Assert.That(actualClass, Is.EqualTo(expectedClass));
         Assert.That(actualStruct, Is.EqualTo(expectedStruct));
+    }
+
+    [Test]
+    public void Transform()
+    {
+        // Arrange
+        var firstInput = Option.Some(5);
+        var secondInput = Option.Some(10);
+
+        var expected = 15;
+        int actual;
+
+        // Act
+        actual = firstInput.Transform(secondInput, (x, y) => x + y).Collapse(-1);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
     }
 }

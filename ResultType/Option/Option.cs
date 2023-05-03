@@ -1,17 +1,27 @@
 namespace ResultType.Option;
 
+public class Option
+{
+    public static Option<T> Some<T>(T value) => new(value);
+    public static Option<T> None<T>() => new();
+}
+
 public class Option<T> : IEquatable<Option<T>>
 {
     private readonly T? _value;
     private readonly bool _isSome;
+    
+    // Only used for internal optimisations.
+    internal bool IsSome => _isSome;
+    internal T? Value => _value;
 
-    private Option()
+    internal Option()
     {
         _value = default;
         _isSome = false;
     }
 
-    private Option(T value)
+    internal Option(T value)
     {
         _value = value;
         _isSome = true;
