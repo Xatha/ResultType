@@ -83,7 +83,7 @@ public readonly struct Result<TResult>
     internal Result(ResultError error)
     {
         _isSuccess = false;
-        _value = default;
+        _value = default!; //Might be a bad idea (?)
         _error = error;
     }
 

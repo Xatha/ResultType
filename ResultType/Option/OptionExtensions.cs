@@ -2,6 +2,8 @@ namespace ResultType.Option;
 
 public static class OptionExtensions
 {
+    #region ToOption
+
     public static Option<T> ToOption<T>(this T? value) where T : class
     {
         return value is null ? Option<T>.None() : Option<T>.Some(value);
@@ -12,6 +14,10 @@ public static class OptionExtensions
         return value is null ? Option<T>.None() : Option<T>.Some(value.Value);
     }
 
+    #endregion
+
+    /*#region Transform
+    
     public static Option<TResult> Transform<T1, T2, TResult>(
         this Option<T1> firstInput,
         Option<T2> secondInput,
@@ -92,4 +98,6 @@ public static class OptionExtensions
 
         return Option<TResult>.None();
     }
+    
+    #endregion*/
 }

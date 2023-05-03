@@ -26,17 +26,17 @@ public class ResultGenericTests
     public void ImplicitOperatorTest()
     {
         // Arrange
-        Result<double> successResult, failureResult1, failureResult2;
+        Result<double> successResult, failureResult;
 
         // Act
         successResult = 2.0;
         //failureResult1 = "Result error1";
-        failureResult2 = ResultError.Create("Result error2");
+        failureResult = ResultError.Create("Result error2");
         
         // Assert
         Assert.That(successResult, Is.EqualTo(Result.Ok(2.0)));
         //Assert.That(failureResult1, Is.EqualTo(Result.Err<double>("Result error1")));
-        Assert.That(failureResult2, Is.EqualTo(Result.Err<double>("Result error2")));
+        Assert.That(failureResult, Is.EqualTo(Result.Err<double>("Result error2")));
     }
 
     [Test]

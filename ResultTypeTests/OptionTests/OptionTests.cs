@@ -16,7 +16,7 @@ public class OptionTests
         int result;
 
         // Act
-        option = Option<string>.Some("Hello World!");
+        option = Option.Some("Hello World!");
         result = option.Map(x => x.Length).Collapse(-1);
         
         // Assert
@@ -50,8 +50,8 @@ public class OptionTests
         Option<int> Add(int x, Option<int> y) => y.Map(z => x + z);
         
         // Act
-        option = Option<string>.Some("Hello World!");
-        length = Option<int>.Some(5);
+        option = Option.Some("Hello World!");
+        length = Option.Some(5);
         result = option.Map(x => Add(x.Length, length)).Collapse(-1);
         
         // Assert
@@ -70,7 +70,7 @@ public class OptionTests
         
         // Act
         option = Option<string>.None();
-        length = Option<int>.Some(5);
+        length = Option.Some(5);
         result = option.Map(x => Add(x.Length, length)).Collapse(-1);
         
         // Assert

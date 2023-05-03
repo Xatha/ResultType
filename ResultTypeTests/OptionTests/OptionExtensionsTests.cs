@@ -77,4 +77,23 @@ public class OptionExtensionsTests
         // Assert
         Assert.That(actual, Is.EqualTo(expected));
     }
+    
+    [Test]
+    public void Polymorphic_Types_Should_Convert()
+    {
+        // Arrange
+        Option<PolyClass> option;
+        Option<IPolymorphic> result;
+        Option<PolyClass> expected;
+        
+        // Act
+        option = Option.Some(new PolyClass());
+        result = option.Cast<IPolymorphic>();
+        expected = option;
+
+        // Assert
+        Assert.That(
+            result.Map(e => e.Value).Collapse(69), 
+            Is.EqualTo(expected.Map(e => ((IPolymorphic) e).Value).Collapse(-1)));
+    }
 }
